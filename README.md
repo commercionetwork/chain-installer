@@ -2,7 +2,7 @@
 The playbook configures a server to be a Commercio Network full node and installs a script that detects whether the node is losing blocks.
 If the node loses blocks, a message will be forwarded to a slack channel of your choice.
 
-**WARNING: The playbook can use only for mainnet. Don't use it for testnet or devnet or localnet.**
+ * **The playbook is designed for mainnet or testnet installation. It should not be used for other types of installations**
 
 ## Prerequisites
 The prerequisites to use this playbook are:
@@ -28,6 +28,7 @@ To use the playbook you need to proceed as follows:
 
 1. Create and add the `hosts.ini` file to the root directory of this repo. [Example hosts file](.hosts.ini). Parameters:
      * `ansible_host`: IP of the machine
+     * `chain_id`: blockchain chain-id
      * `moniker`: name of the node
      * `external_drive`: optional parameter to specify if the node database is to be installed on an external disk. Use this parameter to specify the path to that disk
      * `comm_user`: name of the user that will be created and used by the node service
@@ -39,11 +40,13 @@ To use the playbook you need to proceed as follows:
          * `statesync`: synchronization occurs via statesync.
          * `none`: synchronization occurs normally.
     
-     You can change the behavior of the playbook based on the variables indicated in the `all` file located in the `main/group_vars` path. Below is the table of their meaning:
+     The `chain_id` parameter determines the blockchain chain-id to be used for the installation. Depending on whether you want to install the Commercionetwork node in the mainnet or testnet , you can specify the `chain_id` parameter in the `hosts.ini` file accordingly.
+
+     Copy `all.template` to the file `all` located in the `main/group_vars` directory and customize your variables. You can change the behavior of the playbook based on that variables. Below is the table of their meaning:
+
      | Variable name | Usage |
      | -- | -- |
-     | `bin_version` | Version of the Commercionetworkd binary to use |
-     | `chain_id` | Blockchain chain-id |
+     | `custom_bin_version` | Version of the Commercionetworkd binary to use. **Default bin version will be used if a custom bin version isn't set** |
      | `genesis` | Genesis file URL |
      | `comm_repo` | Path and name of where the Commercio.network binary repository is downloaded |
      | `home_folder` | Home where the `.commercionetwork` folder is installed |
@@ -51,10 +54,10 @@ To use the playbook you need to proceed as follows:
      | `cosmovisor_version` | Version of Cosmovisor to install |
      | `sync_node` | Node IP to sync from in case of `sync_type` = `push` or `pull` |
      | `sync_node_home_folder` | Node home folder to sync from in case of `sync_type` = `push` or `pull` |
-     | `trust_rpc1` | First RPC to sync from in case of `sync_type` = `statesync` |
-     | `trust_rpc2` | Second RPC to sync from in case of `sync_type` = `statesync` |
+     | `custom_trust_rpc1` | First RPC to sync from in case of sync_type = statesync `sync_type` = `statesync`. **Default RPC1 will be used if a first RPC isn't set** |
+     | `custom_trust_rpc2` | Second RPC to sync from in case of sync_type = statesync `sync_type` = `statesync`. **Default RPC2 will be used if a second RPC isn't set**  |
      | `slack_hook` | Webhook where to send reports about a node losing blocks. **No script will be installed if a webhook isn't set** |
-
+        
 2. Proceed to run the `main` playbook:
 ```bash
 ansible-playbook -i hosts.ini main/commercio.yml

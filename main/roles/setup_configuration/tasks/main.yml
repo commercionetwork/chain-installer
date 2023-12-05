@@ -1,8 +1,8 @@
 - name: Download genesis file
   get_url:
-    url: https://raw.githubusercontent.com/commercionetwork/chains/master/commercio-3/genesis.json
+    url: https://raw.githubusercontent.com/commercionetwork/chains/master/{{ chain_id }}/genesis.json
     dest: "~/.commercionetwork/config/genesis.json"
-    checksum: sha256:a4a8a70f471aaef36f820996a0bcbb6b74f7ac1ff0756d0de63ec1db21e4f2f8
+    checksum: "sha256:{{ checksum }}"
   become: true
   become_user: "{{ comm_user }}"
 
